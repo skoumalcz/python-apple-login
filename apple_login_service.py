@@ -21,7 +21,7 @@ class AppleLoginService(object):
             public_key = RSAKeyService().get_public_key(apple_public_keys, key_id)
 
         id_token = auth_response.get_id_token()
-        user_data = self._get_user_data(public_key, id_token)
+        user_data = self._get_user_data(public_key, id_token, validate_identity=validate_identity)
         return user_data
 
     def refresh(self, refresh_token):
