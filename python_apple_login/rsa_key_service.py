@@ -1,5 +1,5 @@
 from Cryptodome.PublicKey import RSA
-from file_text_manager import FileTextManager
+from python_apple_login.file_text_manager import FileTextManager
 
 
 class RSAKeyService(object):

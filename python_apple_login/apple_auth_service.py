@@ -1,6 +1,6 @@
 import requests
-from key_description import KeyDescription
-from authorization_response import AuthorizationResponse
+from python_apple_login.key_description import KeyDescription
+from python_apple_login.authorization_response import AuthorizationResponse
 
 
 class AppleAuthService(object):

@@ -1,8 +1,8 @@
 import jwt
-from user_data import UserData
-from client_secret import ClientSecret
-from apple_auth_service import AppleAuthService
-from rsa_key_service import RSAKeyService
+from python_apple_login.user_data import UserData
+from python_apple_login.client_secret import ClientSecret
+from python_apple_login.apple_auth_service import AppleAuthService
+from python_apple_login.rsa_key_service import RSAKeyService
 
 
 class AppleLoginService(object):
