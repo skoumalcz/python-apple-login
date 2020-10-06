@@ -1,0 +1,27 @@
+import os
+from setuptools import setup
+
+here = os.path.abspath(os.path.dirname(__file__))
+README = open(os.path.join(here, 'README.rst')).read()
+
+# allow setup.py to be run from any path
+os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
+
+
+setup(
+    name='python-apple-login',
+    version='0.1',
+    packages=['python_apple_login'],
+    description='Application for support of apple login',
+    long_description=README,
+    author='Jan Kotras',
+    author_email='jan.kotras@skoumal.net',
+    url='https://www.skoumal.com/',
+    license='MIT',
+    python_requires='>=3.5',
+    install_requires=[
+        "Cryptodome==3.9.*",
+        "jwt",
+        "requests"
+    ]
+)
