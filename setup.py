@@ -14,13 +14,13 @@ setup(
     packages=['python_apple_login'],
     description='Application for support of apple login',
     long_description=README,
-    author='Jan Kotras',
-    author_email='jan.kotras@skoumal.net',
+    author='Jan Kotras, Libor Polehna',
+    author_email='jan.kotras@skoumal.net, libor.polehna@skoumal.net',
     url='https://www.skoumal.com/',
-    license='MIT',
+    license='BSD License',
     python_requires='>=3.5',
     install_requires=[
-        "Cryptodome==3.9.*",
+        "pycryptodome==3.9.*",
         "jwt",
         "requests"
     ]
