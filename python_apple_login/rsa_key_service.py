@@ -1,11 +1,7 @@
 from Cryptodome.PublicKey import RSA
-from python_apple_login.file_text_manager import FileTextManager
 
 
 class RSAKeyService(object):
-
-    def __init__(self):
-        self._file_manager = FileTextManager("rsa_public_keys.text")
 
     def get_public_key(self, apple_public_keys, key_id):
         key = self._find_apple_key(apple_public_keys, key_id)
@@ -18,7 +14,8 @@ class RSAKeyService(object):
         public_key = rsa_key.publickey()
         pem_format = public_key.export_key("PEM")
         pem_string = pem_format.decode("utf-8")
-        self._file_manager.save(pem_string)
+        # TODO save public key and re-used it
+        # self._file_manager.save(pem_string)
         return pem_string
 
     def _find_apple_key(self, apple_keys, key_id):

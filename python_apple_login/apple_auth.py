@@ -1,6 +1,52 @@
 import requests
-from python_apple_login.key_description import KeyDescription
-from python_apple_login.authorization_response import AuthorizationResponse
+import base64
+
+
+class KeyDescription(object):
+
+    def __init__(self, data):
+        self._data = data
+
+    def get_kty(self):
+        return self._data["kty"]
+
+    def get_kid(self):
+        return self._data["kid"]
+
+    def get_e(self):
+        return self._data["e"]
+
+    def get_n(self):
+        return self._data["n"]
+
+    def get_decoded_e(self):
+        return int(self._decode(self.get_e()))
+
+    def get_decoded_n(self):
+        return int(self._decode(self.get_n()))
+
+    def _decode(self, data, altchars=b'+/'):
+        decoded_bytes = base64.urlsafe_b64decode(data + "===")
+        decoded = int.from_bytes(decoded_bytes, "big")
+        return decoded
+
+
+class AuthorizationResponse(object):
+
+    def __init__(self, data):
+        self._data = data
+
+    def get_id_token(self):
+        return self._data["id_token"]
+
+    def get_access_token(self):
+        return self._data["access_token"]
+
+    def get_refresh_token(self):
+        return self._data["refresh_token"]
+
+    def get_expiration(self):
+        return int(self._data["expires_in"])
 
 
 class AppleAuthService(object):
@@ -21,6 +67,7 @@ class AppleAuthService(object):
         data["grant_type"] = "authorization_code"
 
         res = requests.post(self.ACCESS_TOKEN_URL, data=data, headers=headers)
+        # TODO check response
         response_dict = res.json()
         return AuthorizationResponse(response_dict)
 
@@ -31,11 +78,13 @@ class AppleAuthService(object):
         data["grant_type"] = "refresh_token"
 
         res = requests.post(self.REFRESH_TOKEN_URL, data=data, headers=headers)
+        #TODO check response
         response_dict = res.json()
         return AuthorizationResponse(response_dict)
 
     def get_public_keys(self):
         res = requests.get(self.PUBLIC_TOKENS_URL)
+        # TODO check response
         response_dict = res.json()
         keys = [KeyDescription(key_dic) for key_dic in response_dict["keys"]]
         return keys
