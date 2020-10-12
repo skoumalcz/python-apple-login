@@ -16,16 +16,20 @@ class Client(object):
         self.store_directory = store_directory
 
     def verify(self, key_id, authorization_code):
-        my_key_id = get_identity_token_key_id(self.identity_token)
-        private_key_file = open(self.store_directory + '/' + Config.PRIVATE_KEY_FILENAME)
-        private_key = private_key_file.read()
-        private_key_file.close()
-        client_secret = ClientSecret(private_key, key_id, self.team_id,
-                                     self.client_id, self.store_directory + '/' + Config.CLIENT_SECRET_FILENAME).get()
+        # Create client secret
+        #TODO work with private key more safely
+        with open(self.store_directory + '/' + Config.PRIVATE_KEY_FILENAME, "r") as file:
+            private_key = file.read()
+        client_secret_filename = self.store_directory + '/' + Config.CLIENT_SECRET_FILENAME
+        client_secret = ClientSecret(private_key, key_id, self.team_id, self.client_id, client_secret_filename)\
+            .get_valid_client_secret()
 
+        # Create apple authorization service
         auth_service = AppleAuthService(self.client_id, client_secret)
         auth_response = auth_service.auth(authorization_code)
 
+        # Get public keys
+        my_key_id = get_identity_token_key_id(self.identity_token)
         apple_public_keys = auth_service.get_public_keys()
         public_key = RSAKeyService().get_public_key(apple_public_keys, my_key_id)
 
