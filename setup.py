@@ -21,7 +21,7 @@ setup(
     python_requires='>=3.5',
     install_requires=[
         "pycryptodome==3.9.*",
-        "jwt",
+        "pyjwt==1.7.*",
         "requests"
     ]
 )

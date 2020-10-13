@@ -2,12 +2,11 @@ README.rst
 setup.cfg
 setup.py
 python_apple_login/__init__.py
-python_apple_login/apple_auth_service.py
+python_apple_login/apple_auth.py
 python_apple_login/apple_login_service.py
-python_apple_login/authorization_response.py
+python_apple_login/client.py
 python_apple_login/client_secret.py
-python_apple_login/file_text_manager.py
-python_apple_login/key_description.py
+python_apple_login/configuration.py
 python_apple_login/rsa_key_service.py
 python_apple_login/user_data.py
 python_apple_login.egg-info/PKG-INFO
