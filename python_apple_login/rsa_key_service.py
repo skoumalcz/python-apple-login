@@ -20,6 +20,6 @@ class RSAKeyService(object):
 
     def _find_apple_key(self, apple_keys, key_id):
         for apple_key in apple_keys:
-            if apple_key.get_kid() == key_id:
+            if apple_key.kid == key_id:
                 return apple_key
         return None

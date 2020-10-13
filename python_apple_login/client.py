@@ -7,6 +7,21 @@ from python_apple_login.configuration import Config
 from python_apple_login.rsa_key_service import RSAKeyService
 
 
+class UserData(object):
+
+    def __init__(self, data: dict):
+        self._data = data
+
+    @property
+    def data(self) -> dict:
+        return self._data
+
+    @property
+    def email(self) -> str:
+        #TODO
+        return "TODo"
+
+
 class Client(object):
 
     def __init__(self, team_id, client_id, identity_token, store_directory):
@@ -15,7 +30,7 @@ class Client(object):
         self.identity_token = identity_token
         self.store_directory = store_directory
 
-    def verify(self, key_id, authorization_code):
+    def verify(self, key_id, authorization_code) -> UserData:
         # Create client secret
         #TODO work with private key more safely
         with open(self.store_directory + '/' + Config.PRIVATE_KEY_FILENAME, "r") as file:
@@ -29,15 +44,17 @@ class Client(object):
         auth_response = auth_service.auth(authorization_code)
 
         # Get public keys
-        my_key_id = get_identity_token_key_id(self.identity_token)
+        identity_token_key_id = get_identity_token_key_id(self.identity_token)
         apple_public_keys = auth_service.get_public_keys()
-        public_key = RSAKeyService().get_public_key(apple_public_keys, my_key_id)
+        public_key = RSAKeyService().get_public_key(apple_public_keys, identity_token_key_id)
 
-        id_token = auth_response.get_id_token()
+        id_token = auth_response.id_token
         print(id_token)
-        user_data = jwt.decode(id_token, public_key, algorithm='RS256', options={'verify_signature': True,
-'verify_exp': True, 'verify_aud': True}, audience=self.client_id)
-        print(user_data)
+        data = jwt.decode(id_token, public_key, algorithm='RS256',
+                               options={'verify_signature': True,'verify_exp': True, 'verify_aud': True}, audience=self.client_id)
+        print(data)
+        user_data = UserData(data)
+        return user_data
 
 
 def get_identity_token_key_id(identity_token):

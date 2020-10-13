@@ -68,21 +68,17 @@ class AppleAuthService(object):
         self.client_id = client_id
         self.client_secret = client_secret
 
-    def auth(self, authorization_code):
-        data = {}
-        data["code"] = authorization_code
-        data["grant_type"] = "authorization_code"
+    def auth(self, authorization_code) -> AuthorizationResponse:
+        data = {"code": authorization_code, "grant_type": "authorization_code"}
         response_dict = self._process_post_json_request(self.ACCESS_TOKEN_URL, data)
         return AuthorizationResponse(response_dict)
 
-    def refresh(self, refresh_token):
-        data = {}
-        data["refresh_token"] = refresh_token
-        data["grant_type"] = "refresh_token"
+    def refresh(self, refresh_token) -> AuthorizationResponse:
+        data = {"refresh_token": refresh_token, "grant_type": "refresh_token"}
         response_dict = self._process_post_json_request(self.REFRESH_TOKEN_URL, data)
         return AuthorizationResponse(response_dict)
 
-    def get_public_keys(self):
+    def get_public_keys(self) -> list:
         res = requests.get(self.PUBLIC_TOKENS_URL)
         if res.status_code != 200:
             raise Exception("Invalid apple service ({}) response".format(self.PUBLIC_TOKENS_URL))
@@ -91,7 +87,7 @@ class AppleAuthService(object):
         keys = [KeyDescription(key_dic) for key_dic in response_dict["keys"]]
         return keys
 
-    def _process_post_json_request(self, url, data):
+    def _process_post_json_request(self, url, data) -> dict:
         headers = {'content-type': "application/x-www-form-urlencoded"}
         request_data = self._get_base_auth_data()
         request_data.update(data)
@@ -101,7 +97,7 @@ class AppleAuthService(object):
         #TODo check response json
         return res.json()
 
-    def _get_base_auth_data(self):
+    def _get_base_auth_data(self) -> dict:
         return {
             'client_id': self.client_id,
             'client_secret': self.client_secret
