@@ -91,7 +91,7 @@ class AppleAuthService(object):
         headers = {'content-type': "application/x-www-form-urlencoded"}
         request_data = self._get_base_auth_data()
         request_data.update(data)
-        res = requests.post(url, data=data, headers=headers)
+        res = requests.post(url, data=request_data, headers=headers)
         if res.status_code != 200:
             raise Exception("Invalid apple service ({}) response".format(url))
         #TODo check response json

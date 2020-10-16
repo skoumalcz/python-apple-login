@@ -17,26 +17,57 @@ class UserData(object):
         return self._data
 
     @property
-    def email(self) -> str:
-        #TODO
-        return "TODo"
+    def iss(self):
+        return self._data["iss"]
+
+    @property
+    def audience(self):
+        return self._data["aud"]
+
+    @property
+    def expiration(self):
+        return self._data["exp"]
+
+    @property
+    def iat(self):
+        return self._data["iat"]
+
+    @property
+    def sub(self):
+        return self._data["sub"]
+
+    @property
+    def hash(self):
+        return self._data["at_hash"]
+
+    @property
+    def email(self):
+        return self._data["email"]
+
+    @property
+    def is_email_verified(self):
+        return self._data["email_verified"]
+
+    @property
+    def auth_time(self):
+        return self._data["auth_time"]
 
 
 class Client(object):
 
-    def __init__(self, team_id, client_id, identity_token, store_directory):
+    def __init__(self, team_id, client_id, key_id, store_directory):
         self.team_id = team_id
         self.client_id = client_id
-        self.identity_token = identity_token
+        self.key_id = key_id
         self.store_directory = store_directory
 
-    def verify(self, key_id, authorization_code) -> UserData:
+    def verify(self, identity_token_key_id, authorization_code, validate_identity=False) -> UserData:
         # Create client secret
         #TODO work with private key more safely
         with open(self.store_directory + '/' + Config.PRIVATE_KEY_FILENAME, "r") as file:
             private_key = file.read()
         client_secret_filename = self.store_directory + '/' + Config.CLIENT_SECRET_FILENAME
-        client_secret = ClientSecret(private_key, key_id, self.team_id, self.client_id, client_secret_filename)\
+        client_secret = ClientSecret(private_key, self.key_id, self.team_id, self.client_id, client_secret_filename)\
             .get_valid_client_secret()
 
         # Create apple authorization service
@@ -44,19 +75,13 @@ class Client(object):
         auth_response = auth_service.auth(authorization_code)
 
         # Get public keys
-        identity_token_key_id = get_identity_token_key_id(self.identity_token)
-        apple_public_keys = auth_service.get_public_keys()
-        public_key = RSAKeyService().get_public_key(apple_public_keys, identity_token_key_id)
+        public_key = None
+        options = {'verify_signature': validate_identity, 'verify_exp': True, 'verify_aud': True}
+        if validate_identity:
+            apple_public_keys = auth_service.get_public_keys()
+            public_key = RSAKeyService().get_public_key(apple_public_keys, identity_token_key_id)
 
         id_token = auth_response.id_token
-        print(id_token)
-        data = jwt.decode(id_token, public_key, algorithm='RS256',
-                               options={'verify_signature': True,'verify_exp': True, 'verify_aud': True}, audience=self.client_id)
-        print(data)
+        data = jwt.decode(id_token, public_key, algorithm='RS256',options=options, audience=self.client_id)
         user_data = UserData(data)
         return user_data
-
-
-def get_identity_token_key_id(identity_token):
-    identity_token_headers = jwt.get_unverified_header(identity_token)
-    return identity_token_headers["kid"]
