@@ -55,19 +55,20 @@ class UserData(object):
 
 class Client(object):
 
-    def __init__(self, team_id, client_id, key_id, store_directory):
+    def __init__(self, team_id, client_id, key_id, store_directory=None, client_private_key=None):
         self.team_id = team_id
         self.client_id = client_id
         self.key_id = key_id
         self.store_directory = store_directory
+        self.__client_private_key = client_private_key
 
     def verify(self, identity_token_key_id, authorization_code, validate_identity=False) -> UserData:
         # Create client secret
-        #TODO work with private key more safely
-        with open(self.store_directory + '/' + Config.PRIVATE_KEY_FILENAME, "r") as file:
-            private_key = file.read()
+        if self.store_directory:
+            with open(self.store_directory + '/' + Config.PRIVATE_KEY_FILENAME, "r") as file:
+                self.__client_private_key = file.read()
         client_secret_filename = self.store_directory + '/' + Config.CLIENT_SECRET_FILENAME
-        client_secret = ClientSecret(private_key, self.key_id, self.team_id, self.client_id, client_secret_filename)\
+        client_secret = ClientSecret(self.__client_private_key, self.key_id, self.team_id, self.client_id, client_secret_filename) \
             .get_valid_client_secret()
 
         # Create apple authorization service
