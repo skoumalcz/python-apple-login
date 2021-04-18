@@ -81,7 +81,7 @@ class AppleAuthService(object):
     def get_public_keys(self) -> list:
         res = requests.get(self.PUBLIC_TOKENS_URL)
         if res.status_code != 200:
-            raise Exception("Invalid apple service ({}) response".format(self.PUBLIC_TOKENS_URL))
+            raise Exception("Invalid apple service ({}) response".format(self.PUBLIC_TOKENS_URL), res.json())
         # TODo check response json
         response_dict = res.json()
         keys = [KeyDescription(key_dic) for key_dic in response_dict["keys"]]
@@ -93,7 +93,7 @@ class AppleAuthService(object):
         request_data.update(data)
         res = requests.post(url, data=request_data, headers=headers)
         if res.status_code != 200:
-            raise Exception("Invalid apple service ({}) response".format(url))
+            raise Exception("Invalid apple service ({}) response".format(url), res.json())
         #TODo check response json
         return res.json()
 

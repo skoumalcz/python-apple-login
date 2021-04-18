@@ -1,5 +1,8 @@
 # -*- coding: UTF-8 -*-
 from __future__ import unicode_literals
+
+import re
+
 import jwt
 from python_apple_login.apple_auth import AppleAuthService
 from python_apple_login.client_secret import ClientSecret
@@ -55,7 +58,7 @@ class UserData(object):
 
 class Client(object):
 
-    def __init__(self, team_id, client_id, key_id, store_directory=None, client_private_key=None):
+    def __init__(self, team_id, client_id, key_id, store_directory, client_private_key=None):
         self.team_id = team_id
         self.client_id = client_id
         self.key_id = key_id
@@ -64,10 +67,10 @@ class Client(object):
 
     def verify(self, identity_token_key_id, authorization_code, validate_identity=False) -> UserData:
         # Create client secret
-        if self.store_directory:
+        if not self.__client_private_key:
             with open(self.store_directory + '/' + Config.PRIVATE_KEY_FILENAME, "r") as file:
                 self.__client_private_key = file.read()
-        client_secret_filename = self.store_directory + '/' + Config.CLIENT_SECRET_FILENAME
+        client_secret_filename = self.store_directory + '/client_secret_' + re.sub(r'[^\w\d-]','_',self.client_id)
         client_secret = ClientSecret(self.__client_private_key, self.key_id, self.team_id, self.client_id, client_secret_filename) \
             .get_valid_client_secret()
 
