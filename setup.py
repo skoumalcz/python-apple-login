@@ -18,10 +18,10 @@ setup(
     author_email='jan.kotras@skoumal.net, libor.polehna@skoumal.net',
     url='https://www.skoumal.com/',
     license='BSD License',
-    python_requires='>=3.5',
+    python_requires='>=3.12',
     install_requires=[
         "pycryptodome==3.9.*",
-        "pyjwt==1.7.*",
-        "requests"
+        "pyjwt==2.10.*",
+        "requests==2.32.*"
     ]
 )
