@@ -3,12 +3,10 @@ setup.cfg
 setup.py
 python_apple_login/__init__.py
 python_apple_login/apple_auth.py
-python_apple_login/apple_login_service.py
 python_apple_login/client.py
 python_apple_login/client_secret.py
 python_apple_login/configuration.py
 python_apple_login/rsa_key_service.py
-python_apple_login/user_data.py
 python_apple_login.egg-info/PKG-INFO
 python_apple_login.egg-info/SOURCES.txt
 python_apple_login.egg-info/dependency_links.txt

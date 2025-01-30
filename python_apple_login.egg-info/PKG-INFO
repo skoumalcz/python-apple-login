@@ -1,4 +1,4 @@
-Metadata-Version: 1.2
+Metadata-Version: 2.2
 Name: python-apple-login
 Version: 0.1
 Summary: Application for support of apple login
@@ -6,19 +6,29 @@ Home-page: https://www.skoumal.com/
 Author: Jan Kotras, Libor Polehna
 Author-email: jan.kotras@skoumal.net, libor.polehna@skoumal.net
 License: BSD License
-Description: Python Apple login
-        =============
-        
-        Python application for support of apple login
-        
-        Installation
-        ------------
-        
-        .. code-block::
-        
-           pip install
-        
-Platform: UNKNOWN
 Classifier: Environment :: Web Environment
 Classifier: Intended Audience :: Developerst
-Requires-Python: >=3.5
+Requires-Python: >=3.12
+Requires-Dist: pycryptodome==3.9.*
+Requires-Dist: pyjwt==2.10.*
+Requires-Dist: requests==2.32.*
+Dynamic: author
+Dynamic: author-email
+Dynamic: description
+Dynamic: home-page
+Dynamic: license
+Dynamic: requires-dist
+Dynamic: requires-python
+Dynamic: summary
+
+Python Apple login
+=============
+
+Python application for support of apple login
+
+Installation
+------------
+
+.. code-block::
+
+   pip install
